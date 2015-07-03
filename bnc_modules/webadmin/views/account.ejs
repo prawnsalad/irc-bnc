@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BNC</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+
+	<h3><%= user.username %></h3>
+
+	<% connections.map(function(con) { %>
+	<div class="connection">
+		<div class="connection-name"><%= con.connect_info.server %></div>
+		<div class="connection-status">
+			<b><%= con.connected ? 'Connected' : 'Disconnected' %></b>
+			<form action="/account/network/control" method="post">
+				<input type="hidden" name="connection" value="<%= con.id %>" />
+				<input type="hidden" name="act" value="connect" />
+				<input type="hidden" name="_csrf" value="<%= csrf %>" />
+				<button type="submit">Reconnect</button>
+			</form>
+		</div>
+		<div class="connection-connect">
+			<ul>
+				<li><b>Hostname</b> <%= con.connect_info.server %></li>
+				<li><b>Port</b> <%= con.connect_info.port %></li>
+				<li><b>Nick</b> <%= con.connect_info.nick %></li>
+				<li><b>Autojoin</b> <textarea name="channels"><%= con.connect_info.channels %></textarea></li>
+			</ul>
+		</div>
+	</div>
+	<% }); %>
+
+
+	<div class="connection new-connection">
+		<form action="/account/networks" method="post">
+			<div class="connection-name"><input type="text" name="name" /></div>
+			<div class="connection-connect">
+				<ul>
+					<li><b>Hostname</b> <input type="text" name="server" /></li>
+					<li><b>Port</b> <input type="text" name="port" /></li>
+					<li><b>Nick</b> <input type="text" name="nick" /></li>
+					<li><b>Autojoin</b> <textarea name="channels"></textarea></li>
+				</ul>
+
+				<input type="hidden" name="_csrf" value="<%= csrf %>" />
+				<button type="submit">Save</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

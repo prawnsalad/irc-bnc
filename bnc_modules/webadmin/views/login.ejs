@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BNC</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+
+<form action="/login" method="post">
+	<input type="text" name="user" placeholder="Username" /> <br />
+	<input type="password" name="password" placeholder="Password" /> <br />
+	<input type="hidden" name="_csrf" value="<%= csrf %>" />
+	<button type="submit">Login</button>
+</form>
+
+</body>
+</html>
