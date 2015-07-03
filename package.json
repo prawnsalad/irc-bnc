@@ -1,0 +1,35 @@
+{
+  "name": "irc-bnc",
+  "version": "1.0.0",
+  "description": "Extensible IRC Bouncer",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.13.1",
+    "csurf": "^1.8.3",
+    "ejs": "^2.3.2",
+    "express": "^4.13.0",
+    "es6-promise": "^2.3.0",
+    "express-session": "^1.11.3",
+    "lodash": "^3.9.3",
+    "iso8601-convert": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://prawnsalad@github.com/prawnsalad/irc-bnc.git"
+  },
+  "keywords": [
+    "IRC",
+    "bnc",
+    "bouncer"
+  ],
+  "author": "Darren Whitlen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/prawnsalad/irc-bnc/issues"
+  },
+  "homepage": "https://github.com/prawnsalad/irc-bnc"
+}
