@@ -48,14 +48,13 @@ Db.prototype.saveUser = function(user) {
 	});
 	this.storage.set(user_key + '.connections', connections);
 
-	var p = this.storage.get('users')
-	.then(function() { console.log('inside first then'); })
+	return this.storage.get('users')
 	.then(function(raw_users) {
-		console.log('from resolved');
 		var users = raw_users || Object.create(null);
-console.log('raw users', users);
-		if (!users[user.get('name')]) {
-			users[user.get('name')] = user.get('id');
+		var username = user.get('name').toLowerCase();
+
+		if (!users[username]) {
+			users[username] = user.get('id');
 			this.storage.set('users', users);
 		}
 

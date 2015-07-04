@@ -1,6 +1,12 @@
 .connection {
 	border-bottom: 1px solid gray;
 }
+
+.user {
+	border-bottom: 1px solid gray;
+}
+
+
 form.logout {
 	display: inline;
 }

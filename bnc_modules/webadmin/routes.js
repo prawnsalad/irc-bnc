@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var express = require('express');
 var csurf = require('csurf');
 var User = require('../../src/user');
@@ -17,6 +18,12 @@ function authUser(req, res, next) {
 		req.user = user;
 		next();
 	}).catch(next);
+}
+
+
+function authUserAdmin(req, res, next) {
+	// TODO: Actually check for an admin role here
+	return authUser(req, res, next);
 }
 
 
@@ -61,6 +68,45 @@ router.post('/logout', authUser, csrfCheck, function(req, res) {
 
 
 
+/**
+* Admin related routes
+*/
+
+router.get('/admin', authUserAdmin, csrfCheck, function(req, res) {
+	global.storage.get('users').then(function(users) {
+		var data = {};
+		data.csrf = req.csrfToken();
+		data.user = {
+			username: req.user.get('name')
+		};
+		data.users = [];
+
+		_.each(users, function(user_id, username) {
+			data.users.push({username: username, id: user_id});
+		});
+
+		return res.render('admin', data);
+	});
+});
+
+
+
+router.post('/admin/users', authUserAdmin, csrfCheck, function(req, res) {
+	var new_user = new User({
+		name: req.body.username,
+		password: req.body.password
+	});
+
+	global.db.saveUser(new_user).then(function() {
+		res.redirect('/admin');
+	});
+});
+
+
+
+/**
+* Account related routes
+*/
 router.get('/account', authUser, csrfCheck, function(req, res) {
 	var user = req.user;
 	var data = {};
