@@ -15,6 +15,7 @@ Main todo:
 * Impliment admin user roles
 * Structure a standalone bootup script (`server.js`)
 * Document and structure an API to be integrated into external applications
+* Encrypt user passwords
 
 
 ### Misc
