@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BNC</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+
+	<h3>
+		<%= user.username %>
+		<form class="logout" action="/logout" method="post">
+			<button type="submit">Logout</button>
+			<input type="hidden" name="_csrf" value="<%= csrf %>" />
+		</form>
+	</h3>
+
+	<% users.map(function(user) { %>
+	<div class="user">
+		<div class="user-name"><%= user.username %></div>
+	</div>
+	<% }); %>
+
+
+	<div class="user new-user">
+		<h4>New User</h4>
+		<form action="/admin/users" method="post">
+			<ul>
+				<li><b>Username</b> <input type="text" name="username" /></li>
+				<li><b>Password</b> <input type="text" name="password" /></li>
+			</ul>
+
+			<input type="hidden" name="_csrf" value="<%= csrf %>" />
+			<button type="submit">Save</button>
+		</form>
+	</div>
+</body>
+</html>
