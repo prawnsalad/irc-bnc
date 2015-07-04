@@ -24,6 +24,7 @@ function Connection(user, data) {
 	}
 	this.buffers = [];
 
+	// TODO: Change .connected to .status to show disconnected/connecting/connected
 	this.connected = false;
 	this.socket = null;
 	this.rl = null;

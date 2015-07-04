@@ -19,6 +19,8 @@ function User(data) {
 	this.connections = [];
 	this.clients = [];
 
+	// TODO: Is irc-bus the right name here? Many non-irc specific events
+	//       are being emitted through here
 	this.irc_bus = new EventEmitter();
 }
 
@@ -89,6 +91,8 @@ User.prototype.addClient = function(client) {
 	this.irc_bus.emit('user.newclient', client);
 };
 
+// TODO: is this needed? Client interfaces now subscribe to
+//       connection.message events for messages
 User.prototype.broadcast = function() {
 	var applied_args = arguments;
 	_.each(this.clients, function(client) {

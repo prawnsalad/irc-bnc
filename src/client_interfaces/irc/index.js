@@ -17,6 +17,7 @@ module.exports = function() {
 		});
 	};
 
+	// TODO: This should actually stop the interface
 	this.stop = function() {};
 };
 

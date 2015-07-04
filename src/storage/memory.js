@@ -12,6 +12,8 @@ function Memory() {
 	this._series = Object.create(null);
 }
 
+// TODO: Should this be renamed to `init` or something? Not all storage libs will
+//       'load' anything. Some may just connect to a database.
 Memory.prototype.load = function() {
 	var file = '';
 	try {
@@ -70,6 +72,7 @@ Memory.prototype.getSeries = function(name, ts, opts) {
 		var i = 0;
 		var in_position = false;
 
+		// TODO: Check num_next is working.. looks to be using num_prev for some reason
 		if (opts && opts.num_next) {
 			for (i=0; i<series.length-1 && result.length<opts.num_prev; i++) {
 				if (series[i].ts > ts) in_position = true;
@@ -87,6 +90,7 @@ Memory.prototype.getSeries = function(name, ts, opts) {
 	});
 };
 
+// TODO: This promise should resolve true/false to be consistant with .set()
 Memory.prototype.putSeries = function(name, ts, data) {
 	var self = this;
 
