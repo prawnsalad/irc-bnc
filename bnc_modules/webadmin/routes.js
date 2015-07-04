@@ -3,31 +3,9 @@ var csurf = require('csurf');
 var User = require('../../src/user');
 
 var router = module.exports = express.Router();
+var csrfCheck = csurf();
 
-
-// AIM: function that calls csrf() middleware and then our own middleware to check for
-//      any of the errors
-var csrf = csurf();
-var csrfCheck = csrf; /*function(req, res, next) {
-	csrf(req, res, function(err) {
-		if (err.code !== 'EBADCSRFTOKEN') return next(err)
-
-		// handle CSRF token errors here
-		res.status(403)
-		res.send('form tampered with')
-	});
-};
-
-
-function csrfGenToken (req) {
-	req.session. =
-}
-var csrfCheck = function(req, res, next) {
-	req.csrfToken = csrfGenToken();
-});
-*/
-
-
+// User auth middleware
 function authUser(req, res, next) {
 	if (!req.session.user_id) {
 		req.session.auth_redirect_to = req.url;
@@ -42,16 +20,20 @@ function authUser(req, res, next) {
 }
 
 
+
 router.get('/', function(req, res) {
   res.send('Hello World!');
 });
+
+
 
 router.get('/login', csrfCheck, function(req, res) {
 	res.render('login', {csrf: req.csrfToken()});
 });
 
+
+
 router.post('/login', csrfCheck, function(req, res) {
-	//res.send(JSON.stringify(req.query));
 	User.fromAuth(req.body.user, req.body.password).then(function(user) {
 		req.session.user_id = user.get('id');
 
@@ -69,6 +51,15 @@ router.post('/login', csrfCheck, function(req, res) {
 		res.redirect('/login?err=invalid_login');
 	});
 });
+
+
+
+router.post('/logout', authUser, csrfCheck, function(req, res) {
+	delete req.session.user_id;
+	res.redirect('/login');
+});
+
+
 
 router.get('/account', authUser, csrfCheck, function(req, res) {
 	var user = req.user;
@@ -90,6 +81,8 @@ router.get('/account', authUser, csrfCheck, function(req, res) {
 	res.render('account', data);
 });
 
+
+
 router.post('/account/networks', authUser, csrfCheck, function(req, res) {
 	if (!req.body.name || !req.body.server) {
 		return res.redirect('/account');
@@ -108,7 +101,9 @@ router.post('/account/networks', authUser, csrfCheck, function(req, res) {
 	return res.redirect('/account');
 });
 
-router.post('/account/network/control', authUser, function(req, res) {
+
+
+router.post('/account/network/control', authUser, csrfCheck, function(req, res) {
 	if (!req.body.connection || !req.body.act) {
 		return res.redirect('/account');
 	}
