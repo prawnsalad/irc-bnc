@@ -114,35 +114,39 @@ Connection.prototype.onSocketConnect = function() {
 		output: this.socket,
 		terminal: false
 	});
+
 	this.rl.setPrompt('');
-
-	this.listenTo(this.rl, 'line', (function(line) {
-		console.log('[RAW S>C '+this.id+']', line);
-		var msg = ircMessage.parse(line);
-
-		// Malformed line?
-		if (!msg) {
-			return;
-		}
-
-		var continue_processing = true;
-
-		// Check if we need to process this IRC command
-		if (typeof ConnectionEvents[msg.command] === 'function') {
-			continue_processing = ConnectionEvents[msg.command](this, msg);
-		}
-
-		if (continue_processing !== false){
-			// This event will typically be picked up by a client interface
-			this.user.irc_bus.emit('connection.message', this, msg);
-		}
-	}).bind(this));
+	this.listenTo(this.rl, 'line', this.onLine.bind(this));
 
 	var nick = this.get('nick');
 	this.write('NICK ' + nick);
 	this.write('USER ' + this.get('username') + ' 0 * :' + this.get('gecos'));
 
 	this.connected = true;
+};
+
+
+Connection.prototype.onLine = function(line) {
+	console.log('[RAW S>C '+this.id+']', line);
+	var msg = ircMessage.parse(line);
+
+	// Malformed line?
+	if (!msg) {
+		return;
+	}
+
+	var continue_processing = true;
+
+	// A ConnectionEvent returning false means it should not be emitted to the
+	// event bus as it has already been handled internally.
+	if (typeof ConnectionEvents[msg.command] === 'function') {
+		continue_processing = ConnectionEvents[msg.command](this, msg);
+	}
+
+	if (continue_processing !== false){
+		// This event will typically be picked up by a client interface
+		this.user.irc_bus.emit('connection.message', this, msg);
+	}
 };
 
 
