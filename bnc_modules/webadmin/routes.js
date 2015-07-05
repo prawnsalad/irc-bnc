@@ -119,8 +119,9 @@ router.get('/account', authUser, csrfCheck, function(req, res) {
 	user.connections.map(function(connection) {
 		data.connections.push({
 			id: connection.get('id'),
+			connect_info: connection.get('connect_info'),
 			state: connection.state,
-			connect_info: connection.get('connect_info')
+			connection: connection
 		});
 	});
 

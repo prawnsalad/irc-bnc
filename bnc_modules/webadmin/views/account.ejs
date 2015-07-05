@@ -22,9 +22,9 @@
 		<div class="connection-status">
 			<b><%= (function() {
 						var texts = {};
-						texts[con.STATE_DISCONNECTED] = 'Disconnected';
-						texts[con.STATE_CONNECTING] = 'Connecting..';
-						texts[con.STATE_CONNECTED] = 'Connected';
+						texts[con.connection.STATE_DISCONNECTED] = 'Disconnected';
+						texts[con.connection.STATE_CONNECTING] = 'Connecting..';
+						texts[con.connection.STATE_CONNECTED] = 'Connected';
 						return texts[con.state];
 					})()
 				%></b>
