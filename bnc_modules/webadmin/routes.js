@@ -119,7 +119,7 @@ router.get('/account', authUser, csrfCheck, function(req, res) {
 	user.connections.map(function(connection) {
 		data.connections.push({
 			id: connection.get('id'),
-			connected: connection.connected,
+			state: connection.state,
 			connect_info: connection.get('connect_info')
 		});
 	});

@@ -20,7 +20,14 @@
 	<div class="connection">
 		<div class="connection-name"><%= con.connect_info.server %></div>
 		<div class="connection-status">
-			<b><%= con.connected ? 'Connected' : 'Disconnected' %></b>
+			<b><%= (function() {
+						var texts = {};
+						texts[con.STATE_DISCONNECTED] = 'Disconnected';
+						texts[con.STATE_CONNECTING] = 'Connecting..';
+						texts[con.STATE_CONNECTED] = 'Connected';
+						return texts[con.state];
+					})()
+				%></b>
 			<form action="/account/network/control" method="post">
 				<input type="hidden" name="connection" value="<%= con.id %>" />
 				<input type="hidden" name="act" value="connect" />

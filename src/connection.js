@@ -6,9 +6,17 @@ var EventEmitter = require('events').EventEmitter;
 var ConnectionBuffer = require('./connectionbuffer');
 var ConnectionEvents = require('./connectionevents');
 var Attributes = require('./libs/attributes.js');
+var defineConst = require('./libs/defineconst.js');
 
 
 module.exports = Connection;
+
+
+defineConst(Connection, {
+	STATE_DISCONNECTED: 0,
+	STATE_CONNECTING: 1,
+	STATE_CONNECTED: 2
+});
 
 
 function Connection(user, data) {
@@ -24,8 +32,7 @@ function Connection(user, data) {
 	}
 	this.buffers = [];
 
-	// TODO: Change .connected to .status to show disconnected/connecting/connected
-	this.connected = false;
+	this.state = this.STATE_DISCONNECTED;
 	this.socket = null;
 	this.rl = null;
 
@@ -68,7 +75,7 @@ Connection.prototype.userMask = function() {
 
 // Connections
 Connection.prototype.disconnect = function(quit_message) {
-	this.connected && this.socket.end('QUIT :' + quit_message);
+	this.state === this.STATE_CONNECTED && this.socket.end('QUIT :' + quit_message);
 };
 
 Connection.prototype.connect = function(connect_info) {
@@ -93,6 +100,7 @@ Connection.prototype.connect = function(connect_info) {
 
 	}
 
+	this.state = this.STATE_CONNECTING;
 	this.user.irc_bus.emit('connection.connecting', this);
 
 	this.socket = net.createConnection({
@@ -105,7 +113,7 @@ Connection.prototype.connect = function(connect_info) {
 
 
 Connection.prototype.onSocketClose = function() {
-	this.connected = false;
+	this.state = this.STATE_DISCONNECTED;
 };
 
 Connection.prototype.onSocketConnect = function() {
@@ -122,7 +130,7 @@ Connection.prototype.onSocketConnect = function() {
 	this.write('NICK ' + nick);
 	this.write('USER ' + this.get('username') + ' 0 * :' + this.get('gecos'));
 
-	this.connected = true;
+	this.state = this.STATE_CONNECTED;
 };
 
 
